@@ -113,6 +113,7 @@ public class CGPA {
 		marks.add(s.nextInt());
 		grades.add(grade(marks.get(n-1)));
 		pts.add(points(grades.get(n-1)));
+		calculator();
 	}
 	
 	private int searchCourse(String name) {
@@ -135,9 +136,12 @@ public class CGPA {
 			grades.remove(j);
 			pts.remove(j);
 			n=n-1;
+			System.out.println("Deleted the course Successfully");
+			calculator();
 			return true;
 		}
 		System.out.println("No such course exists");
+		calculator();
 		return false;
 	}
 	
@@ -160,9 +164,12 @@ public class CGPA {
 			marks.add(s.nextInt());
 			grades.add(grade(marks.get(n-1)));
 			pts.add(points(grades.get(n-1)));
+			System.out.println("Changes are done Successfully");
+			calculator();
 			return true;
 		}
 		System.out.println("No such course exits");
+		calculator();
 		return false;
 	}
 
