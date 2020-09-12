@@ -1,58 +1,69 @@
+//		190031187 RADHAKRISHNA
+
 package skill;
 
-import java.util.Scanner;
+import java.util.*;
 
 public class CGPA {
 	Scanner s=new Scanner(System.in);
-	private String[] course;
-	private int[] marks;
-	private double[] credits;
-	private char[] grades;
-	private int[] pts;
+	private ArrayList<String> course;
+	private ArrayList<Integer> marks;
+	private ArrayList<Double> credits;
+	private ArrayList<Character> grades;
+	private ArrayList<Integer> pts;
 	private int n;
 	public CGPA() {
+		this.course = new ArrayList<String>();
+		this.marks = new ArrayList<Integer>();
+		this.credits = new ArrayList<Double>();
+		this.grades = new ArrayList<Character>();
+		this.pts = new ArrayList<Integer>();
+	}
+	public void input() {
 		System.out.println("Enter number of subjects:");
 		n= s.nextInt();
-		this.course = new String[n];
-		this.marks = new int[n];
-		this.credits = new double[n];
-		this.grades = new char[n];
-		this.pts = new int[n];
-	}
-	public void init() {
 		for(int i=0;i<n;i++) {
-			course[i]=s.next();
-			credits[i]=s.nextDouble();
-			marks[i]=s.nextInt();
-			grades[i]=grade(marks[i]);
-			pts[i]=points(grades[i]);	
+			System.out.println("Enter course name");
+			course.add(s.next());
+			System.out.println("Enter course credits");
+			credits.add(s.nextDouble());
+			System.out.println("Enter marks obtained in that course");
+			marks.add(s.nextInt());
+			grades.add(grade(marks.get(i)));
+			pts.add(points(grades.get(i)));	
 		}
-		opts(n);
+		mainmenu(n);
 	}
-	public void opts(int n) {
-		int d;
-		System.out.println("Available operations: \n1.Add a course\n2.Delete a course\n3.Change course Details\n4.Percentage caluculation");
-		System.out.println("\nChoose your option:");
-		while((d=s.nextInt())!=0) {
-			System.out.println("\nChoose your option:");
-			if(d==1) {
-				int k=addCourse();
-				printres(k,pts);
-			}
-			if(d==2) {
-				int j= delCourse(n);
-				printres(j,pts);
-			}
-			if(d==3) {
-				changeDetails();
-				printres(n,pts);
-			}
-			if(d==4){
-				printres(n+1,pts);
+	private void mainmenu(int n) {
+		boolean repeat=true;
+		while(repeat) {
+			switch(submenu()) {
+				case 1:
+					addCourse();
+					break;
+				case 2:
+					delCourse();
+					break;
+				case 3:
+					changeDetails();
+					break;
+				case 4:
+					calculator();
 			}
 		}
 	}
-	public char grade(int m) {
+	private int submenu() {
+		System.out.println("Available operations:");
+		System.out.println("1.Add a course");
+		System.out.println("2.Delete a course");
+		System.out.println("3.Change course Details");
+		System.out.println("4.Percentage calculation");
+		System.out.println("Enter any other number to exit");
+		System.out.println("Choose your option:");
+		return s.nextInt();
+	}
+	
+	private char grade(int m) {
 		char x=' ';
 		if(m>=90 && m<=100) { x='O';}
 		else if(m>=80 && m<90) {  x='A';}
@@ -60,7 +71,9 @@ public class CGPA {
 		else if(m>=70 && m<60) {  x='C';}
 		else if(m>=60 && m<50) {  x='D';}
 		else if(m<=50) {  x='F';}
-		else {System.out.println("Invalid Marks Try again!!"); init();}
+		else {
+			System.out.println("Invalid Marks Try again From First!!");
+		}
 		return x;
 	}
 	private int points(char c) {
@@ -73,54 +86,84 @@ public class CGPA {
 		else if(c=='F') {z=5;} 
 		return z;
 	}
-	public void printres(int n,int[] s) {
-		float cgpa;float sum = 0;
+	
+	private void calculator() {
+		float cgpa;
+		float sum=0,total=0;
 		for(int i=0;i<n;i++) {
-			sum+=pts[i];
+			sum+=credits.get(i)*pts.get(i);
+			total+=credits.get(i);
 		}
-		cgpa=sum/n;
-		System.out.println("Course  Credits   Marks  Points  Grades");
+		cgpa=sum/total;
+		System.out.println("Course\t\tCredits\tMarks\tPoint\tGrades");
 		for(int i=0;i<n;i++) {
-			System.out.println(course[i]+"\t  "+credits[i]+"\t   "+marks[i]+"\t   "+pts[i]+"\t    "+grades[i]);
+			System.out.println(course.get(i)+"\t\t"+credits.get(i)+"\t"+marks.get(i)+"\t"+pts.get(i)+"\t"+grades.get(i));
 		}
-		System.out.printf("CGPA: %.2f",cgpa);
+		System.out.printf("CGPA: %.2f\n",cgpa);
 	}
-	public int addCourse() {
-		System.out.println("Enter number of subj you entered till now:");
-		int n=s.nextInt();
+	
+	private void addCourse() {
+		n=n+1;
 		System.out.println("You are ready to add your course");
-			course[n]=s.next();
-			credits[n]=s.nextDouble();
-			marks[n]=s.nextInt();
-			grades[n]=grade(marks[n]);
-			pts[n]=points(grades[n]);
-			n+=1;return n;
+		System.out.println("Enter course name");
+		course.add(s.next());
+		System.out.println("Enter course credits");
+		credits.add(s.nextDouble());
+		System.out.println("Enter marks obtained in that course");
+		marks.add(s.nextInt());
+		grades.add(grade(marks.get(n-1)));
+		pts.add(points(grades.get(n-1)));
 	}
-	public int delCourse(int n) {
-		System.out.println("Enter course number you want to delete:");
-		int f=s.nextInt();
-		for(int i=f;i<course.length;i++) {
-			course[i-1]=course[i];
-			credits[i-1]= credits[i];
-			marks[i-1]= marks[i];
-			grades[i-1]=grades[i];
-			pts[i-1]=pts[i];
-			if(course[i]==null) {break;}
-			n=-1;
+	
+	private int searchCourse(String name) {
+		for(int i=0;i<n;i++) {
+			if(course.get(i).equalsIgnoreCase(name)) {
+				return i;
+			}
 		}
-		return n;
+		return -1;
 	}
-	public void changeDetails() {
-		System.out.println("enter number of the course to change details:");int n=s.nextInt();
-		System.out.println("enter name of the course to change:");
-		course[n-1]=s.next();
-		System.out.printf("\nenter new credits of the course %s :",course[n-1]);
-		credits[n-1]=s.nextDouble();
-		System.out.printf("\nenter new marks of the course %s:",course[n-1]);
-		marks[n-1]=s.nextInt();
-		grades[n-1]=grade(marks[n-1]);
-		pts[n-1]=points(grades[n-1]);
-		
+	
+	private boolean delCourse() {
+		System.out.println("Enter course name you want to delete:");
+		String f=s.next();
+		int j=searchCourse(f);
+		if(j!=-1) {
+			course.remove(j);
+			credits.remove(j);
+			marks.remove(j);
+			grades.remove(j);
+			pts.remove(j);
+			n=n-1;
+			return true;
+		}
+		System.out.println("No such course exists");
+		return false;
+	}
+	
+	private boolean changeDetails() {
+		System.out.println("Enter course name you want to change details:");
+		String f=s.next();
+		int j=searchCourse(f);
+		if(j!=-1) {
+			course.remove(j);
+			credits.remove(j);
+			marks.remove(j);
+			grades.remove(j);
+			pts.remove(j);
+			System.out.println("You are ready to change your course");
+			System.out.println("Enter course name");
+			course.add(s.next());
+			System.out.println("Enter course credits");
+			credits.add(s.nextDouble());
+			System.out.println("Enter marks obtained in that course");
+			marks.add(s.nextInt());
+			grades.add(grade(marks.get(n-1)));
+			pts.add(points(grades.get(n-1)));
+			return true;
+		}
+		System.out.println("No such course exits");
+		return false;
 	}
 
 }
